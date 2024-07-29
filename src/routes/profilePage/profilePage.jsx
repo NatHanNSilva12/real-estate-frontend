@@ -1,87 +1,45 @@
 import Chat from "../../components/chat/Chat";
 import List from "../../components/list/List";
 import "./profilePage.scss";
-import apiRequest from "../../lib/apiRequest";
-import { Await, Link, useLoaderData, useNavigate } from "react-router-dom";
-import { Suspense, useContext } from "react";
-import { AuthContext } from "../../context/AuthContext";
 
 function ProfilePage() {
-  const data = useLoaderData();
-
-  const { updateUser, currentUser } = useContext(AuthContext);
-
-  const navigate = useNavigate();
-
-  const handleLogout = async () => {
-    try {
-      await apiRequest.post("/auth/logout");
-      updateUser(null);
-      navigate("/");
-    } catch (err) {
-      console.log(err);
-    }
-  };
   return (
     <div className="profilePage">
       <div className="details">
         <div className="wrapper">
           <div className="title">
             <h1>Informação do usuário</h1>
-            <Link to="/profile/update">
-              <button>Atualizar perfil</button>
-            </Link>
+            <button>Atualizar perfil</button>
           </div>
           <div className="info">
             <span>
               Foto:
-              <img src={currentUser.avatar || "noavatar.jpg"} alt="" />
+              <img
+                src="https://media-gru2-2.cdn.whatsapp.net/v/t61.24694-24/427577191_995690192272639_2835870704666958633_n.jpg?ccb=11-4&oh=01_Q5AaIPUdM2fT8zl4FzaLBJLUSZh0CMC6t_W3Yy0AQcvzkOYr&oe=66A2516B&_nc_sid=e6ed6c&_nc_cat=107"
+                alt=""
+              />
             </span>
             <span>
-              Nome do usuário: <b>{currentUser.username}</b>
+              Nome: <b>Rafael Sérgio</b>
             </span>
             <span>
-              E-mail: <b>{currentUser.email}</b>
+              E-mail: <b>rafaelsergio@wabrokersimoveis.com.br</b>
             </span>
-            <button onClick={handleLogout}>Sair</button>
           </div>
           <div className="title">
             <h1>Minha lista</h1>
-            <Link to="/add">
-              <button>Criar nova postagem</button>
-            </Link>
+            <button>Adicionar novo imóvel</button>
           </div>
-          <Suspense fallback={<p>Carregando...</p>}>
-            <Await
-              resolve={data.postResponse}
-              errorElement={<p>Erro ao carregar os posts!</p>}
-            >
-              {(postResponse) => <List posts={postResponse.data.userPosts} />}
-            </Await>
-          </Suspense>
+          <List />
           <div className="title">
             <h1>Listas salvas</h1>
           </div>
-          <Suspense fallback={<p>Carregando...</p>}>
-            <Await
-              resolve={data.postResponse}
-              errorElement={<p>Erro ao carregar os posts!</p>}
-            >
-              {(postResponse) => <List posts={postResponse.data.savedPosts} />}
-            </Await>
-          </Suspense>
+          <List />
         </div>
       </div>
       <div className="chatContainer">
         <div className="wrapper">
-          <Suspense fallback={<p>Carregando...</p>}>
-            <Await
-              resolve={data.chatResponse}
-              errorElement={<p>Erro ao carregar os chats!</p>}
-            >
-              {(chatResponse) => <Chat chats={chatResponse.data}/>}
-            </Await>
-          </Suspense>
+          <Chat/>
         </div>
       </div>
     </div>

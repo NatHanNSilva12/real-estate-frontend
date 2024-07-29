@@ -1,20 +1,19 @@
-import { useContext, useState } from "react";
 import "./login.scss";
 import { Link, useNavigate } from "react-router-dom";
-import apiRequest from "../../lib/apiRequest";
-import { AuthContext } from "../../context/AuthContext";
+import { useState } from "react";
+
 
 function Login() {
-  const [error, setError] = useState("");
-  const [isLoading, setIsLoading] = useState(false);
 
-  const {updateUser} = useContext(AuthContext)
+  const [error, setError] = useState("");
+  
+
+
 
   const navigate = useNavigate();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setIsLoading(true);
     setError("");
     const formData = new FormData(e.target);
 
@@ -22,42 +21,27 @@ function Login() {
     const password = formData.get("password");
 
     try {
-      const res = await apiRequest.post("/auth/login", {
+      const res = axios.post("http://localhost:8800/api/auth/register", {
         username,
         password,
       });
 
-      updateUser(res.data)
-
-      navigate("/");
+      navigate("/homePage");
     } catch (err) {
       setError(err.response.data.message);
-    } finally {
-      setIsLoading(false);
     }
   };
+
   return (
     <div className="login">
       <div className="formContainer">
         <form onSubmit={handleSubmit}>
-          <h1>Bem vindo de volta!</h1>
-          <input
-            name="username"
-            required
-            minLength={3}
-            maxLength={20}
-            type="text"
-            placeholder="Nome do usuário"
-          />
-          <input
-            name="password"
-            type="password"
-            required
-            placeholder="Senha"
-          />
-          <button disabled={isLoading}>Login</button>
+          <h1>Bem vindo de volta</h1>
+          <input name="username" type="text" placeholder="Nome do usuário" />
+          <input name="password" type="password" placeholder="Senha" />
+          <button>Entrar</button>
           {error && <span>{error}</span>}
-          <Link to="/register">{"Don't"} Já possui uma conta?</Link>
+          <Link to="/register">{"Não"} possui uma conta?</Link>
         </form>
       </div>
       <div className="imgContainer">
